@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <!-- jQuery임포트 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous">
+
+        // .val() -> 값을 입력, .text() 값 변경 기능, .append() html요소 동적 추가 기능
+        // 버튼추가 백틱을 활용 !  ` `
+        //let url = $('#post-url').val();
+        // let btn_text = $('#btn-posting-box').text();  콘솔창에 입력하면 text가 변경됩니다.
+        // btn_text         // '포스팅박스 열기'가 출력된다.
+        // $('#btn-posting-box').text('포스팅박스 닫기');
+        // let temp_html = `<button>추가 버튼</button>`;
+        // $('#cards-box').append(temp_html);
+    </script>
+</head>
+
+<body>
+    <div class="form-group">
+        <label for="exampleInputEmail1">아티클 URL</label>
+        <input id="post-url" type="email" class="form-control" aria-describedby="emailHelp"
+            placeholder="">
+    </div>
+
+    <div class="posting-box" id="post-box">
+        <h1>hahah...</h1>
+        <!-- ('#post-box').hide(); -->
+        <!-- ('#post-box').show(); -->
+        <button id="btn-posting-box" type="button" class="btn btn-primary">포스팅박스 열기</button>
+        
+    </div>
+</body>
+</html>

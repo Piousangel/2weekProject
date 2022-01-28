@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <!-- jQuery임포트 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous">
+
+    // 주의: 홑따옴표(')가 아닌 backtick(`)으로 감싸야 합니다.
+    // 숫자 1번 키 왼쪽의 버튼을 누르면 backtick(`)이 입력됩니다.
+    // backtick을 사용하면 문자 중간에 Javascript 변수를 삽입할 수 있습니다.
+    let img_url = 'https://cdn.vox-cdn.com/thumbor/Pkmq1nm3skO0-j693JTMd7RL0Zk=/0x0:2012x1341/1200x800/filters:focal(0x0:2012x1341)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg';
+    let link_url = 'https://google.com/';
+    let title = '제목 - 구글';
+    let desc = '구글에 대한 설명이 여기에 들어간다.';
+    let comment = '여기는 개인적인 코멘트가 들어간다.';
+
+    // 아래 코드는 콘솔창에 들어가는 코드입니다.
+
+    //let temp_html = `<button>추가 버튼</button>`;
+    
+    // let temp_html = `<div class="card">
+    //                     <img class="card-img-top"
+    //                         src="${img_url}"
+    //                         alt="Card image cap">
+    //                     <div class="card-body">
+    //                         <a href="${link_url}" class="card-title">${title}</a>
+    //                         <p class="card-text">${desc}</p>
+    //                         <p class="card-text comment">${comment}</p>
+    //                     <div>
+    //                 </div>`;
+    
+    $(document).ready(function(){
+	    alert('페이지가 로딩되었습니다.')
+    });
+    
+    </script>
+</head>
+    
+<body>
+    <div id="cards-box" class="card-columns">
+        <div class="card"> 가나다 </div>
+        <div class="card"> 가나다 </div>
+        <div class="card"> 가나다 </div>
+        <div class="card"> 가나다 </div>
+        <div class="card"> 가나다 </div>
+        <div class="card"> 가나다 </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        #post-box {
+            display: block;
+        }
+    </style>
+
+    <!-- jQuery임포트 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous">
+
+    </script>
+</head>
+    
+<body>
+   <button onclick="openclose1()" type="button" class= "btn btn-primary btn-lg">
+        포스팅 박스 열기
+   </button>
+   
+   <button onclick="openclose2()" type="button" class="btn btn-primary btn-lg">
+        포스팅 박스 열기
+    </button>
+
+    <button onclick="openclose3()" type="button" class="btn btn-primary btn-lg">
+        포스팅 박스 열기
+    </button>
+</body>
+
+<script>
+     function openclose1() {
+        let status = $('#post-box').css('display')
+        if (status == 'block'){
+            console.log("open")
+        }
+        else{
+            console.log("closed")
+        }
+    }
+
+    function openclose2() {
+        let status = $('#post-box').css('display')
+        if (status == 'block'){
+            $('#post-box').hide()
+        }
+        else{
+            $('#post-box').show()
+        }
+    }
+
+    function openclose3() {
+        let status = $('#post-box').css('display')
+        if(status == 'block'){
+            $('#post-box').hide()
+            $('#posting-box-btn').text('포스팅박스 열기')
+        }
+        else{
+            $('#post-box').show()
+            $('#posting-box-btn').text('포스팅박스 닫기')
+        }
+    }
+</script>
+</html>
