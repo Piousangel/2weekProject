@@ -71,14 +71,24 @@
             }
 
             function postArticle() {
+
+                // 1. 유저가 입력한 데이터를 #post_url과 #post-comment에서 가져오기
+                let url = $("#post-url").val();
+                let comment = $("#post-comment").val();
+
+                // 2. memo에 POST 방식으로 메모 생성 요청하기
+                
                 $.ajax({
                     type: "POST",
                     url: "/memo",
-                    data: {},
+                    data: { url_give: url, comment_give: comment},
                     success: function (response) { // 성공하면
                         if (response["result"] == "success") {
-                            alert(response["msg"]);
+                            alert(response["포스팅 성공!"]);
+                            // 3. 성공시 페이지 새로고침하기
+                            window.location.reload();
                         }
+                        else alert("서버 오류!")
                     }
                 })
             }
