@@ -16,3 +16,8 @@ python 파일명.py
 
 <h6 기본적으로 Flask 서버를 만들 때는 항상 프로젝트 폴더 안에 static, templates 폴더와 app.py를 만들고 시작합시다 >
 # 메타데이터 스크래핑은 외울게요.
+
+처음에 우분투 인스턴스 구매했어요..  
+EC2 인스턴스에서 보안 ->Edit inbound rules 에 5000(TCP), 80(HTTP), 27017(TCP)포트 열어주고. 
+http:// 내 ec2퍼블릭 ip:5000 해주세요. 
+
