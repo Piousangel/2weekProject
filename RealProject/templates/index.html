@@ -19,6 +19,9 @@
             integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
             crossorigin="anonymous"></script>
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
         <!-- 구글폰트 -->
         <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
 
@@ -54,7 +57,7 @@
                 $("#cards-box").html("");
                 showArticles();
             });
-            
+
             function openClose() {
                 // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
                 if ($("#post-box").css("display") == "block") {
@@ -71,24 +74,24 @@
             }
 
             function postArticle() {
-            // 1. 유저가 입력한 데이터를 #post-url과 #post-comment에서 가져오기
-            let url = $("#post-url").val();
-            let comment = $("#post-comment").val();
+                let url = $("#post-url").val();
+                let comment = $("#post-comment").val();
 
-            // 2. memo에 POST 방식으로 메모 생성 요청하기
-            $.ajax({
-                type: "POST", // POST 방식으로 요청하겠다.
-                url: "/memo", // /memo라는 url에 요청하겠다.
-                data: { url_give: url, comment_give: comment}, // 데이터를 주는 방법
-                success: function(response){ // 성공하면
-                if (response["result"] == "success") {
-                    alert("포스팅 성공!");
-                    // 3. 성공 시 페이지 새로고침하기
-                    window.location.reload();
-                }
-                else alert("서버 오류!")
-                }
-            })
+                // 2. memo에 POST 방식으로 메모 생성 요청하기
+                $.ajax({
+                    type: "POST", // POST 방식으로 요청하겠다.
+                    url: "/memo", // /memo라는 url에 요청하겠다.
+                    data: {url_give: url, comment_give: comment}, // 데이터를 주는 방법
+                    success: function (response) { // 성공하면
+                        if (response["result"] == "success") {
+                            alert("포스팅 성공!");
+                            // 3. 성공 시 페이지 새로고침하기
+                            window.location.reload();
+                        } else {
+                            alert("서버 오류!")
+                        }
+                    }
+                })
             }
 
             function showArticles() {
@@ -98,15 +101,16 @@
                     data: {},
                     success: function (response) {
                         let articles = response["articles"];
-                        for(let i=0; i < articles.length; i++){
-                            makeCard(articles[i]["image"], articles[i]["url"],articles[i]["title"], articles[i]["desc"], articles[i]["comment"])
+                        console.log(articles);
+                        for (let i = 0; i < articles.length; i++) {
+                            makeCard(articles[i]["image"], articles[i]["url"], articles[i]["title"], articles[i]["desc"], articles[i]["comment"]);
                         }
                     }
                 })
             }
 
-            function makeCard(url, title, desc, comment, image) {
-                let temp_html = `<div class="card">
+            function makeCard(image, url, title, desc, comment) {
+                let tempHtml = `<div class="card">
                         <img class="card-img-top" src="${image}" alt="Card image cap">
                         <div class="card-body">
                         <a href="${url}" target="_blank" class="card-title">${title}</a>
@@ -114,7 +118,8 @@
                         <p class="card-text comment">${comment}</p>
                         </div>
                     </div>`;
-                $("#cards-box").append(temp_html);
+                $("#cards-box").append(tempHtml);
+
             }
         </script>
 
