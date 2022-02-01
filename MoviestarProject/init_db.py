@@ -53,6 +53,7 @@ def insert_star(url):
     def insert_all():
         db.mystar.drop()
         urls = get_urls()
+        
         for url in urls:
             insert_star(url)
 
