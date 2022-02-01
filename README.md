@@ -21,3 +21,19 @@ python 파일명.py
 EC2 인스턴스에서 보안 ->Edit inbound rules 에 5000(TCP), 80(HTTP), 27017(TCP)포트 열어주고. 
 http:// 내 ec2퍼블릭 ip:5000 해주세요. 
 
+# 서버에 mongoDB 설치
+
+wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -  
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+sudo apt-get update  
+sudo apt-get install -y mongodb-org
+
+# mongoDB 실행
+sudo service mongod start
+
+mongo     -> mongoDB 쉘 login 
+input id/password  
+
+use admin;  
+db.createUser({user: "test", pwd: "test", roles["root"]});  
+
