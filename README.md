@@ -1,5 +1,14 @@
 # 2월5일까지 http://hyunseokmemo.shop  
 
+## 사용 Stack
+- Python, Jquery
+- Bootstrap
+- Flask
+- MongoDB
+- Robo 3T
+- FileZilla
+- Ubuntu
+- .Shop domain
 
 # 패키지사용
 
