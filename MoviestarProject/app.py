@@ -21,7 +21,7 @@ def show_stars():
     # 참고) find({},{'_id':False}), sort()를 활용하면 굿!
     stars = list(db.mystar.find({}, {'_id': False}).sort('like', -1))
     # 2. 성공하면 success 메시지와 함께 stars_list 목록을 클라이언트에 전달합니다.
-    return jsonify({'result': 'success', 'msg': 'list 연결되었습니다!'})
+    return jsonify({'result': 'success', 'stars_list': stars})
 
 
 @app.route('/api/like', methods=['POST'])
@@ -37,7 +37,7 @@ def like_star():
     # 참고: '$set' 활용하기!
     db.mystar.update_one({'name': name_receive}, {'$set': {'like': new_like}})
     # 5. 성공하면 success 메시지를 반환합니다.
-    return jsonify({'result': 'success', 'msg': 'like 연결되었습니다!'})
+    return jsonify({'result': 'success'})
 
 
 @app.route('/api/delete', methods=['POST'])

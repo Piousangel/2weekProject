@@ -86,7 +86,7 @@
                         if (response["result"] == "success") {
                             alert("포스팅 성공!");
                             // 3. 성공 시 페이지 새로고침하기
-                            window.location.reload();            //리로드 하면서 get방식으로 app.py에 보내지나?
+                            window.location.reload();            //리로드 하면서 get방식으로 app.py에 보내짐
                         } else {
                             alert("서버 오류!")
                         }
@@ -110,14 +110,15 @@
             }
 
             function makeCard(image, url, title, desc, comment) {
-                let tempHtml = `<div class="card">
-                        <img class="card-img-top" src="${image}" alt="Card image cap">
+                let tempHtml = 
+                `<div class="card">
+                    <img class="card-img-top" src="${image}" alt="Card image cap">
                         <div class="card-body">
-                        <a href="${url}" target="_blank" class="card-title">${title}</a>
-                        <p class="card-text">${desc}</p>
-                        <p class="card-text comment">${comment}</p>
+                            <a href="${url}" target="_blank" class="card-title">${title}</a>
+                            <p class="card-text">${desc}</p>
+                            <p class="card-text comment">${comment}</p>
                         </div>
-                    </div>`;
+                </div>`;
                 $("#cards-box").append(tempHtml);
 
             }
@@ -149,6 +150,7 @@
                     <button type="button" class="btn btn-primary" onclick="postArticle()">기사저장</button>
                 </div>
             </div>
+
             <div id="cards-box" class="card-columns">
                 <div class="card">
                     <img class="card-img-top"
