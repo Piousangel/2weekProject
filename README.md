@@ -39,3 +39,10 @@ db.createUser({user: "test", pwd: "test", roles["root"]});
 
 ### Port forwarding
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 5000
+
+### 원격 접속을 종료하더라도 서버가 계속 돌아가게 하기  
+nohup python app.py &  
+
+### 아래 명령어로 미리 pid 값(프로세스 번호)을 보고 프로세스 죽이기
+ps -ef | grep 'app.py'  
+kill -9 [pid값]
