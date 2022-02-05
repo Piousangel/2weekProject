@@ -1,4 +1,3 @@
-## http://hyunseokmemo.shop  도메인 구매하여 여기로 접속하셔도 됩니다.
 from crypt import methods
 from flask import Flask, render_template, jsonify, request
 import requests
@@ -7,7 +6,7 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb://test:test@18.233.169.28', 27017)   #mongodb://test:test@18.233.169.28
+client = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28
 db = client.dbmemo
 
 
@@ -31,22 +30,25 @@ def post_memo():
 @app.route('/edit', methods=['POST'])
 def edit_memo():
 
-    existing_receive = request.form['existing_give']
+    existing = request.form['existing_give']
     title_receive = request.form['title_give']  
     comment_receive = request.form['comment_give']  
 
     new_title = title_receive
     new_comment = comment_receive
     
-    db.memos.update_one({'title': existing_receive}, {'$set': {'title' : new_title, 'comment': new_comment}})
+    # db.memos.update_one({'title': existing}, {'$set': {'title': new_title}})
+    db.memos.update_one({'title': existing}, {'$set': {'comment': new_comment}})
+    
     return jsonify({'result': 'success'})
+
 
 @app.route('/delete', methods=['POST'])
 def delete_memo():
     title_receive = request.form['title_give']
 
     db.memos.delete_one({'title': title_receive})
-    #success 메시지 리턴
+
     return jsonify({'result': 'success'})
 
 
