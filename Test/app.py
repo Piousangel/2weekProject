@@ -1,3 +1,4 @@
+## http://hyunseokmemo.shop  도메인 구매하여 여기로 접속하셔도 됩니다.
 from crypt import methods
 from flask import Flask, render_template, jsonify, request
 import requests

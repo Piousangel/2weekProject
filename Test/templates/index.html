@@ -76,7 +76,7 @@
 
                 // let index = n
                 let title = $("#memo-title").val();
-                let comment = $("#memo-comment").val();
+                let comment = $("#memo-content").val();
 
                 
                 $.ajax({
@@ -192,9 +192,9 @@
                         </div>
                         <div class="form-group">
                             <label for="post-comment"></label>
-                            <textarea id="memo-comment" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
+                            <textarea id="memo-content" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="postArticle()">저장하기</button>
+                        <button type="submit" class="btn btn-primary" onclick="postArticle()">저장하기</button>
                     </div>
                 </div>
             </div>
