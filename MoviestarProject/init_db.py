@@ -25,7 +25,7 @@ def get_urls():
             url = base_url + a['href']
             urls.append(url)
 
-    return urls
+    return urls 
 
 
 # 출처 url로부터 영화인들의 사진, 이름, 최근작 정보를 가져오고 mystar 콜렉션에 저장
