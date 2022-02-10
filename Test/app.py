@@ -6,7 +6,7 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28
+client = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
 db = client.dbmemo
 
 
@@ -38,7 +38,7 @@ def edit_memo():
     new_comment = comment_receive
     
     db.memos.update_one({'title': existing}, {'$set': {'title': new_title}})
-    db.memos.update_one({'title': existing}, {'$set': {'comment': new_comment}})
+    db.memos.update_one({'title': new_title}, {'$set': {'comment': new_comment}})
     
     return jsonify({'result': 'success'})
 

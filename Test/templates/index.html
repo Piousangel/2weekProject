@@ -63,14 +63,13 @@
                 var idName = "id_" + ids
 
                 //document.getElementById(id_0)
+                // console.log(t.idName)
             
                 console.log(idName)
                 if ($('#'+idName).css("display") == "none") {
-                    $('#'+idName).show();
-                    $("#btn-post-box").text("수정닫기");
+                    $('#'+idName).show();   
                 } else {
                     $('#'+idName).hide();
-                    $("#btn-post-box").text("수정하기");
                 }
             }
         
@@ -109,6 +108,7 @@
                 })
             }
 
+            // 아니 매개변수로 받은 값 어떻게 Id로 부여해주죠??????? 됐더
             function makeCard(idx, title, comment) {       //idx  id_'+idx+'  '+${idx}+
                 
                 let tempHtml = 
@@ -119,31 +119,28 @@
                             <p class="lead">
                                 <button onclick="openClose('${idx}')" id="btn-post-box" type="button" class="btn btn-primary">수정</button>
                                 <button onclick="deleteMemo('${title}')" type="button" class="btn btn-primary">삭제</button>
-                            </p>
-
-                            <div id="id_'+idx+'" class="form-post" style="display:none">
+                            </p>               
+                        </div>
+                        <div id="id_`+idx+`" class="form-post" style="display:none">
                         	    <div class="form-group">
                             		<label for="post-url"></label>
-                            		<input id="edit-title" class="form-control" placeholder="메모 제목을 입력하세요">
+                            		<input id="edit-title`+idx+`" class="form-control" placeholder="메모 제목을 입력하세요">
                         	    </div>
                         	    <div class="form-group">
                             		<label for="post-comment"></label>
-                            		<textarea id="edit-comment" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
+                            		<textarea id="edit-comment`+idx+`" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
                         	    </div>
-                        	    <button type="button" class="btn btn-primary" onclick="editMemo('${title}')">저장</button>
-                   	        </div>
-                            
-                        </div>
-                        
+                        	    <button type="button" class="btn btn-primary" onclick="editMemo('${title}', `+idx+`)">저장</button>
+                   	        </div>                 
                 </div>`;
                 $("#cards-box").append(tempHtml);
 
             }
 
-            function editMemo(existingTitle){
+            function editMemo(existingTitle, idx){
                 
-                let title = $("#edit-title").val();
-                let comment = $("#edit-comment").val();
+                let title = $("#edit-title"+idx).val();
+                let comment = $("#edit-comment"+idx).val();
 
                 $.ajax({
                     type: "POST",
