@@ -11,7 +11,7 @@
             integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
             crossorigin="anonymous">
 
-              <!-- JS -->
+			  <!-- JS -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
@@ -59,27 +59,26 @@
                 showArticles();
             });
 
-            function openClose(id) {
+            function openClose(ids) {
+                var idName = "id_" + ids
 
-                
-                if ($("#edit-box").css("display") == "none") {
-                    $("#edit-box").show();
+                //document.getElementById(id_0)
+            
+                console.log(idName)
+                if ($('#'+idName).css("display") == "none") {
+                    $('#'+idName).show();
                     $("#btn-post-box").text("수정닫기");
                 } else {
-                    $("#edit-box").hide();
+                    $('#'+idName).hide();
                     $("#btn-post-box").text("수정하기");
                 }
             }
-
-            // let n = 1
-            
+        
             function postArticle() {
 
-                // let index = n
                 let title = $("#memo-title").val();
                 let comment = $("#memo-content").val();
 
-                
                 $.ajax({
                     type: "POST", 
                     url: "/memo", 
@@ -96,9 +95,6 @@
             }
 
             function showArticles() {
-
-                // $('#cards-box').empty()
-
                 $.ajax({
                     type: "GET",
                     url: "/memo",
@@ -107,43 +103,45 @@
                         let articles = response["articles"];
                         console.log(articles);
                         for (let i = 0; i < articles.length; i++) {
-                            makeCard(articles[i]["title"], articles[i]["comment"]);  //, articles[i]["idx"]
+                            makeCard(i, articles[i]["title"], articles[i]["comment"]);  //, articles[i]["idx"]
                         }
                     }
                 })
             }
 
-            function makeCard(title, comment) {       //idx
+            function makeCard(idx, title, comment) {       //idx  id_'+idx+'  '+${idx}+
+                
                 let tempHtml = 
                 `<div class="card">
                         <div class="card-body">
                             <a target="_blank" class="card-title">${title}</a>
                             <p class="card-text comment">${comment}</p>
                             <p class="lead">
-                                <button onclick="openClose(this.id)" id="btn-post-box" type="button" class="btn btn-primary">수정</button>
+                                <button onclick="openClose('${idx}')" id="btn-post-box" type="button" class="btn btn-primary">수정</button>
                                 <button onclick="deleteMemo('${title}')" type="button" class="btn btn-primary">삭제</button>
                             </p>
-                            <div id="edit-box" class="form-post" style="display:block">
-                                <div class="form-group">
-                                    <label for="post-url"></label>
-                                    <input id="edit-title" class="form-control" placeholder="메모 제목을 입력하세요">
-                                </div>
-                                <div class="form-group">
-                                    <label for="post-comment"></label>
-                                    <textarea id="edit-comment" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
-                                </div>
-                                    <button type="button" class="btn btn-primary" onclick="editMemo('${title}')">저장</button>
-                                </div>
-                            </div>
-                        </div>                       
+
+                            <div id="id_'+idx+'" class="form-post" style="display:none">
+                        	    <div class="form-group">
+                            		<label for="post-url"></label>
+                            		<input id="edit-title" class="form-control" placeholder="메모 제목을 입력하세요">
+                        	    </div>
+                        	    <div class="form-group">
+                            		<label for="post-comment"></label>
+                            		<textarea id="edit-comment" class="form-control" placeholder="내용을 입력하세요" rows="2"></textarea>
+                        	    </div>
+                        	    <button type="button" class="btn btn-primary" onclick="editMemo('${title}')">저장</button>
+                   	        </div>
+                            
+                        </div>
+                        
                 </div>`;
-                
                 $("#cards-box").append(tempHtml);
 
             }
 
             function editMemo(existingTitle){
-
+                
                 let title = $("#edit-title").val();
                 let comment = $("#edit-comment").val();
 
@@ -204,8 +202,8 @@
             </div>
 
             <div id="cards-box" class="card-columns">
-
                 <div class="card">
+                    
                     <div class="card-body">
                         <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
                         <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
@@ -213,7 +211,7 @@
                     </div>
                 </div>
                 <div class="card">
-            
+                    
                     <div class="card-body">
                         <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
                         <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>

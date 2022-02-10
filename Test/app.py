@@ -37,7 +37,7 @@ def edit_memo():
     new_title = title_receive
     new_comment = comment_receive
     
-    # db.memos.update_one({'title': existing}, {'$set': {'title': new_title}})
+    db.memos.update_one({'title': existing}, {'$set': {'title': new_title}})
     db.memos.update_one({'title': existing}, {'$set': {'comment': new_comment}})
     
     return jsonify({'result': 'success'})
