@@ -19,9 +19,11 @@ def home():
 def post_memo():
     
     title_receive = request.form['title_give']  
-    comment_receive = request.form['comment_give']  
+    comment_receive = request.form['comment_give']
+    id_receive = request.form['id_give']
+    password_receive = request.form['password_give'] 
 
-    alonememo = {'title': title_receive, 'comment': comment_receive}
+    alonememo = {'title': title_receive, 'comment': comment_receive, 'user_id': id_receive, 'user_password': password_receive}
 
     db.memos.insert_one(alonememo)
 
@@ -32,7 +34,8 @@ def edit_memo():
 
     existing = request.form['existing_give']
     title_receive = request.form['title_give']  
-    comment_receive = request.form['comment_give']  
+    comment_receive = request.form['comment_give']
+    password_receive = request.form['password_give']
 
     new_title = title_receive
     new_comment = comment_receive
