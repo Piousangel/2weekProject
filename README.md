@@ -11,7 +11,7 @@
 - .Shop domain
 
 # 패키지사용
-
+````````````````
 python3 -m venv .venv
 source .venv/bin/activate
 pip install requests  -> 패키지 설치
