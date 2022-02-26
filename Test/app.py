@@ -1,5 +1,5 @@
 from crypt import methods
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, redirect, render_template, jsonify, request
 import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient  
@@ -12,7 +12,14 @@ db = client.dbmemo
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('login.html')
+
+@app.route('/create_form')
+def create_form():
+    return render_template('newform.html')
+    # return jsonify({'result' : 'success'})
+    # return redirect('/newform.html')
+
 
 
 @app.route('/memo', methods=['POST'])
