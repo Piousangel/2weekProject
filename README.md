@@ -9,7 +9,10 @@
 - FileZilla
 - Ubuntu
 - .Shop domain
-
+---
+- Node.js Express
+- Bulma
+- jinja2
 # 패키지사용
 
 python3 -m venv .venv
