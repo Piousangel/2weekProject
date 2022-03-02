@@ -20,6 +20,13 @@ def create_form():
     # return jsonify({'result' : 'success'})
     # return redirect('/newform.html')
 
+@app.route('/chk_id')
+def check_id():
+    return b
+
+@app.route('/create_m')
+def create_m():
+    return a
 
 
 @app.route('/memo', methods=['POST'])
