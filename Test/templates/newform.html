@@ -26,21 +26,24 @@
     <title>회원가입 페이지</title>
 
     <style>
-        .warp {
-            width: 1000px;
-        }
-
-        .jumbotron {
-            width: 500px;
-            padding: 50px;
-            margin: 200px 300px;
+        
+        .jumbotron h1 {
+            color : black;
+            border-bottom: 10px solid;
+            background-color: silver;
+            width: 450px;
+            margin: 0 auto;
         }
 
         .form-group {
             display: inline-block;
             /* border: solid black; */
             padding: 10px;
-            margin: 0;
+            /* margin: 0; */
+        }
+
+        #post-box {
+            border:  3px solid black;
         }
 
     </style>
@@ -50,8 +53,6 @@
     <div class="wrap">
         {% extends 'login.html' %}
         {% block banner %}
-        {% endblock %}
-
         <div class="jumbotron">
             <h1>회원가입 페이지 <span class="badge bg-secondary"></span></h1>
             <hr class="my-4">
@@ -81,6 +82,7 @@
                 <button type="submit" class="btn btn-primary" onclick="postUser()">회원가입</button>
             </div>
         </div>
+        {% endblock %}   
 </body>
 
 <!-- 중복아이디, 비밀번호 일치, 회원가입시 DB저장 -->

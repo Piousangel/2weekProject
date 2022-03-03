@@ -17,16 +17,15 @@ def home():
 @app.route('/create_form')
 def create_form():
     return render_template('newform.html')
-    # return jsonify({'result' : 'success'})
-    # return redirect('/newform.html')
+    
+@app.route('/chk_id')
+def check_id():
 
-# @app.route('/chk_id')
-# def check_id():
-
-#     id_receive = request.form['id_give']
+    id_receive = request.form['id_give']
+    
 
 
-#     return b
+    return b
 
 # @app.route('/create_m')
 # def create_m():
