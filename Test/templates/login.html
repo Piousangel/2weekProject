@@ -23,24 +23,41 @@
 
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-    <title>로그인 페이지</title>
+    <title>{{title}}</title>
 
     <style>
         .form-post {
-            /* border : solid yellow; */
-            margin : 50px;
-            padding: auto;
+
+            margin: 0 auto;
+            padding: 70px;
             width: 500px;
             height: 300px;
         }
+        #banner {
+            margin: 50px;
+        }
+
+        .jumbotron h1 {
+            color : black;
+            border-bottom: 10px solid;
+            background-color: silver;
+            width: 450px;
+            margin: 0 auto;
+        }
+
 
     </style>
 
 </head>
 <body>
     <div class="wrap">
+        {% block banner %}
+        <div id="banner" class="jumbotron">
+            <h1>메인 베너 상속할것</h1>
+        </div>
+        {% endblock %}
         <div class="jumbotron">
-            <h1>오늘의 추천! <span class="badge bg-secondary">ver1.0</span></h1>
+            <h1>오늘의 추천 메뉴!</span></h1>
             <hr class="my-4">
             <div id="post-box" class="form-post" style="display:block">
                 <h2>로그인 하기 <span class="badge bg-secondary"></span></h2>
