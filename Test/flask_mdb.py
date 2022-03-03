@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 # from pymongo import MongoClient
 
 app = Flask(__name__, template_folder="templates")
-app.config["MONGO_URL"] = "mongodb://localhost:27017/bulletin"
+app.config["MONGO_URI"] = "mongodb://localhost:27017/bulletin"
 app.config['SECRET_KEY'] = 'psswrd'
 
 # client = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
@@ -26,17 +26,17 @@ def app_write() :
             return render_template("login.html")
 
         signup = mongo.db.signup
-        check_cnt = signup.find({"email" : email}).count()
+        # check_cnt = signup.find({"email" : email}).count()
         
-        if check_cnt > 0 :
-            flash("It is a registerd email")
-            return render_template("login.html")
+        # if check_cnt > 0 :
+        #     flash("It is a registerd email")
+        #     return render_template("login.html")
         
         to_db = {
             "email" : email,
             "pw" : pw,
         }
-        to_do_signup = signup.insert_one(to_db)
+        to_db_signup = signup.insert_one(to_db)
         last_signup = signup.find().sort("_id", -1).limit(5)
 
         for _ in last_signup :

@@ -51,54 +51,17 @@
 </head>
 <body>
     <div class="wrap">
-        <div class="wrap">
-            {% extends 'login2.html' %}
-            {% block banner %}
-            <div class="jumbotron">
-                <h1>메인 페이지 <span class="badge bg-secondary"></span></h1>
-                <hr class="my-4">
-                <div id="post-box" class="form-post" style="display:block">
-                    <button type="submit" class="btn btn-primary" onclick="logout()">로그아웃</button>
-                    <button type="submit" class="btn btn-primary" onclick="editUser()">회원정보수정</button>
-                </div>
-            </div>
-            {% endblock %}   
+        {% extends 'login.html' %}
+        {% block banner %}
+        <div class="jumbotron">
+            <h1>hi</h1>
+        </div>
+        {% endblock %}   
 </body>
 
 <!-- 중복아이디, 비밀번호 일치, 회원가입시 DB저장 -->
 
 <script>
     
-    function editUser() {
-
-            $.jax({
-                type: "GET",
-                url: "/admin",
-                data: {},
-                success: function(response) {
-                    if(response['result'] == 'success') {
-                        alert('어드민페이지 이동')                      
-                    }
-                }
-            })
-            
-
-    }
-
-    function logout() {
-
-            $.ajax({
-                type: "GET",
-                url: "/logout",
-                data: {},
-                success: function (response) {
-                    if(response['result'] == 'success') {
-                        alert('로그아웃 완료')
-                        window.location.reload()
-                    }
-                }
-            })
-    }
-
 </script>
 </html>

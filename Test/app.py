@@ -6,46 +6,76 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
-db = client.dbmemo
-
+userInfo = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
+db = userInfo.dbclient
 
 @app.route('/')
 def home():
-    return render_template('login.html', title = 'Login page')
+    return render_template('login2.html', title = 'Login page')
 
-@app.route('/create_form')
+@app.route('/create_form', methods=['GET'])
 def create_form():
-    return render_template('newform.html')
+    return render_template('newform.html', title = 'NewForm page')
+    # return jsonify({'result': 'success', 'html_name': 'newform.html'})
+
+@app.route('/confirm_user', methods=['GET','POST'])
+def login_user():
+    if request.method == 'POST':
+        id_receive = request.form['id_give']
+        pw_receive = request.form['id_give']
+
+        id = db.getCollection('userInfo').find({"user_id":"id_receive"})
+        if id == id_receive :
+            pw = db.getCollection('userInfo').find({"user_password":"pw_receive"})
+            if pw == pw_receive :
+                return jsonify({'result': 'success'})
+        else :
+                return jsonify({'result': 'fail'})
+    else :
+        return render_template('main2.html')
     
 @app.route('/chk_id')
 def check_id():
 
     id_receive = request.form['id_give']
     
-
-
-    return b
-
-# @app.route('/create_m')
-# def create_m():
-#     return a
-
-
-@app.route('/memo', methods=['POST'])
-def post_memo():
+    name = db.getCollection('userInfo').find({"user_name":"id_receive"})
+    if name is None :
+        return jsonify({'result': 'success'})
+    else :
+        return jsonify({'result': 'fail'})
     
-    title_receive = request.form['title_give']  
-    comment_receive = request.form['comment_give']
-    id_receive = request.form['id_give']
-    password_receive = request.form['password_give'] 
 
-    alonememo = {'title': title_receive, 'comment': comment_receive, 'user_id': id_receive, 'user_password': password_receive}
+@app.route('/create_m', methods=['GET', 'POST'])
+def create_m():
+    if request.method == 'POST':
+        name_receive = request.form['name_give']
+        id_receive = request.form['id_give']
+        password_receive = request.form['password_give']
 
-    db.memos.insert_one(alonememo)
+        createform = {'user_name': name_receive, 'user_id': id_receive, 'user_password' : password_receive}
+        db.userInfo.insert_one(createform)
+        return render_template('login.html')
+    else :
 
-    return jsonify({'result': 'success'})
+        return render_template('login.html')
+        # return jsonify({'result': 'success'})
 
+
+
+# @app.route('/memo', methods=['POST'])
+# def post_memo():
+    
+#     title_receive = request.form['title_give']  
+#     comment_receive = request.form['comment_give']
+#     id_receive = request.form['id_give']
+#     password_receive = request.form['password_give'] 
+
+#     alonememo = {'title': title_receive, 'comment': comment_receive, 'user_id': id_receive, 'user_password': password_receive}
+
+#     db.memos.insert_one(alonememo)
+
+    
 @app.route('/edit', methods=['POST'])
 def edit_memo():
 
