@@ -1,17 +1,51 @@
 from crypt import methods
-from flask import Flask, redirect, render_template, jsonify, request
-import requests
+from flask import Flask, json, request, render_template, jsonify, redirect, url_for, session
+import requests, random
+import jwt
 from bs4 import BeautifulSoup
 from pymongo import MongoClient  
+from flask_bcrypt import Bcrypt
+from functools import wraps
 
 app = Flask(__name__)
-
+# SECRET_KEY = 'abc'
+app.config['SECRET_KEY'] = 'ABC123'
+bcrypt = Bcrypt(app)
 userInfo = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
 db = userInfo.dbclient
+
+def check_for_token(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        token = request.args.get('my_access_token')
+        if not token:
+            print('there is no token')
+            return redirect('/login2')
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        except:
+            print('token invalid')
+            return redirect('login2')
+        return func(*args, **kwargs)
+    return wrapped
+
+# @app.route('/chk_token')
+# def token():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.userInfo.find_one({"user_id" : payload['user_id']})
+#     except jwt.ExpiredSignatureError:
+#         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+#     except jwt.exceptions.DecodeError:
+#         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 @app.route('/')
 def home():
     return render_template('login2.html', title = 'Login page')
+
+
+
 
 @app.route('/create_form', methods=['GET'])
 def create_form():

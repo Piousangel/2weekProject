@@ -81,14 +81,13 @@
                 url: "/create_m",
                 data: {'name_give': name, 'id_give': id, 'password_give': pw},
                 success: function(response) {
-                    // if (response['result'] == 'succeess') {
-
-                    //     alert('회원가입이 되었습니다.')
-                    //     window.location.reload()
-                    // }
-                    // else 
-                    //     alert('회원가입이 실패했습니다.')
-                    location.href = "/"
+                    if (response['result'] == 'succeess') {
+                        alert('회원가입이 되었습니다.')
+                        window.location.href = "/"
+                    }
+                    else 
+                        alert('회원가입이 실패했습니다.')
+                        window.location.reload();
                 }
             })
         }
