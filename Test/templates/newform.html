@@ -61,17 +61,17 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('사용가능한 아이디 입니다.')
-                        window.location.reload()
+                        // window.location.reload()
                     }
                     else{
                         alert('이미 사용중인 아이디입니다.')
+                        window.location.reload();
                     }          
                 }   
             })
         }
 
         function create_Form() {
-
             let name = $("#name-give").val();
             let id = $("#id-give").val();
             let pw = $("#password-give").val();
@@ -81,13 +81,15 @@
                 url: "/create_m",
                 data: {'name_give': name, 'id_give': id, 'password_give': pw},
                 success: function(response) {
-                    if (response['result'] == 'succeess') {
-                        alert('회원가입이 되었습니다.')
-                        window.location.href = "/"
+                    if (response['result'] == 'success') {
+                        location.href = "/home";
+                        
+                        alert('회원가입이 되었습니다.');
                     }
-                    else 
+                    else{ 
                         alert('회원가입이 실패했습니다.')
                         window.location.reload();
+                    }
                 }
             })
         }

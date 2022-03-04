@@ -1,4 +1,7 @@
+from base64 import decode
 from crypt import methods
+from datetime import datetime
+from os import access
 from flask import Flask, json, request, render_template, jsonify, redirect, url_for, session
 import requests, random
 import jwt
@@ -40,33 +43,65 @@ def check_for_token(func):
 #     except jwt.exceptions.DecodeError:
 #         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+
 @app.route('/')
 def home():
     return render_template('login2.html', title = 'Login page')
 
-
-
+@app.route('/home')
+def welcome():
+    return render_template('login2.html')
 
 @app.route('/create_form', methods=['GET'])
 def create_form():
     return render_template('newform.html', title = 'NewForm page')
     # return jsonify({'result': 'success', 'html_name': 'newform.html'})
 
-@app.route('/confirm_user', methods=['GET','POST'])
-def login_user():
-    if request.method == 'POST':
-        id_receive = request.form['id_give']
-        pw_receive = request.form['id_give']
-
-        id = db.getCollection('userInfo').find({"user_id":"id_receive"})
-        if id == id_receive :
-            pw = db.getCollection('userInfo').find({"user_password":"pw_receive"})
-            if pw == pw_receive :
-                return jsonify({'result': 'success'})
-        else :
-                return jsonify({'result': 'fail'})
+@app.route('/logincheck', methods=['GET'])
+@check_for_token
+def logincheck():
+    if session['logged_in'] == True :
+        user_token = request.args.get('my_access_token')
+        decoded = jwt.decode(user_token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        doc = {'user_id':decoded['id']}
+        return redirect('/main')
     else :
-        return render_template('main2.html')
+        return redirect('/home')
+
+@app.route('/confrim_user', methods = ['POST'])
+def login_user() :
+    id_receive = request.form['id_give']
+    pw_receive = request.form['id_give']
+    user_info = db.userInfo.find_one({'user_id' : id_receive})
+    try:
+        if bcrypt.check_password_hash(userInfo['user_password'], pw_receive) :
+            access_payload = {"id": id_receive, "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=30)}
+            session['logged_in'] = True
+            return jsonify({"result": "success", 'access_token': jwt.encode(access_payload, app.config['SECRET_KEY'], algorithm="HS256")})
+        else :
+            return jsonify({"result": "fail"})
+    except :
+        return jsonify({"result": "fail"})
+
+@app.route('/main')
+def mainhome() :
+    return render_template('main2.html')
+
+# @app.route('/confirm_user', methods=['GET','POST'])
+# def login_user():
+#     if request.method == 'POST':
+#         id_receive = request.form['id_give']
+#         pw_receive = request.form['id_give']
+
+#         id = db.getCollection('userInfo').find({"user_id":"id_receive"})
+#         if id == id_receive :
+#             pw = db.getCollection('userInfo').find({"user_password":"pw_receive"})
+#             if pw == pw_receive :
+#                 return jsonify({'result': 'success'})
+#         else :
+#                 return jsonify({'result': 'fail'})
+#     else :
+#         return render_template('main2.html')
     
 @app.route('/chk_idOverlapping', methods=['POST'])
 def check_idOverlapping():
