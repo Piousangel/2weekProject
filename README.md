@@ -26,6 +26,12 @@ brew services start mongodb-community
 Project Interpreter에서 pymongo 패키지를 설치한다.
 python 파일명.py
 
+~~~
+render_params= {}
+        render_params['이름아무거나'] = DB 아이디 or 받은 아이디
+        return render_template('main.html', **render_params)
+~~~
+
 <h6 기본적으로 Flask 서버를 만들 때는 항상 프로젝트 폴더 안에 static, templates 폴더와 app.py를 만들고 시작합시다 >
 ### 메타데이터 스크래핑은 외울게요.
 
