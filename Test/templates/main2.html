@@ -23,7 +23,7 @@
 
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-    <title>회원가입 페이지</title>
+    <title>메인 페이지</title>
 
     <style>
         
@@ -56,6 +56,7 @@
             {% block banner %}
             <div class="jumbotron">
                 <h1>메인 페이지 <span class="badge bg-secondary"></span></h1>
+                <h1>{{name}} <span class="badge bg-secondary"></span></h1>
                 <hr class="my-4">
                 <div id="post-box" class="form-post" style="display:block">
                     <button type="submit" class="btn btn-primary" onclick="logout()">로그아웃</button>

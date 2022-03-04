@@ -60,6 +60,7 @@
             <hr class="my-4">
             <div id="post-box" class="form-post" style="display:block">
                 <h2>로그인 하기 <span class="badge bg-secondary"></span></h2>
+                <h5>{{id}}<span class="badge bg-secondary"></span></h5>
                 <div>
                     <div class="form-group">
                         <label for="post-url"></label>
@@ -93,18 +94,18 @@
 
     function postUser() {
         let id = $("#id-give").val()
-        let pw = $("password-give").val()
+        let pw = $("#password-give").val()
 
-        $.ajax({
-                           
+        $.ajax({    
             type: "POST",
             url: "/confirm_user",
-            data : {'id_give': id, 'password_give:' : pw},
-            success: function (response) {
-                
+            data : {'id_give': id, 'password_give': pw},
+            success: function(response) {
+                console.log(response);
                 if(response['result'] == 'success') {
                     sessionStorage.setItem('my_access_token', response['access_token']);
-                    location.href = "/"
+                    alert("로그인 되었습니다.");
+                    location.href = "/main"
                 }
                 else {
                     alert("아이디 또는 비밀번호를 다시 확인해 주세요.");
