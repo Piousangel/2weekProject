@@ -68,33 +68,43 @@ def login_user():
     else :
         return render_template('main2.html')
     
-@app.route('/chk_id')
-def check_id():
-
+@app.route('/chk_idOverlapping', methods=['POST'])
+def check_idOverlapping():
     id_receive = request.form['id_give']
-    
-    name = db.getCollection('userInfo').find({"user_name":"id_receive"})
-    if name is None :
+    # db_ID = db.getCollection('userInfo').find({"user_name":"id_receive"})
+    db_id = db.userInfo.find_one({'user_id' : id_receive})
+    if db_id is None :
         return jsonify({'result': 'success'})
     else :
         return jsonify({'result': 'fail'})
     
+# @app.route('/create_m', methods=['GET', 'POST'])
+# def create_m():
+#     if request.method == 'POST':
+#         name_receive = request.form['name_give']
+#         id_receive = request.form['id_give']
+#         password_receive = request.form['password_give']
 
-@app.route('/create_m', methods=['GET', 'POST'])
+#         createform = {'user_name': name_receive, 'user_id': id_receive, 'user_password' : password_receive}
+#         db.userInfo.insert_one(createform)
+#         return render_template('login.html')
+#     else :
+
+#         return render_template('login.html')
+#         # return jsonify({'result': 'success'})
+
+@app.route('/create_m', methods = ['POST'])
 def create_m():
-    if request.method == 'POST':
-        name_receive = request.form['name_give']
-        id_receive = request.form['id_give']
-        password_receive = request.form['password_give']
-
-        createform = {'user_name': name_receive, 'user_id': id_receive, 'user_password' : password_receive}
+    name_receive = request.form['name_give']
+    id_receive = request.form['id_give']
+    password_receive = request.form['password_give']
+    pw_hash = bcrypt.generate_password_hash(password_receive)
+    try:
+        createform = {'user_name': name_receive, 'user_id': id_receive, 'user_password' : pw_hash}
         db.userInfo.insert_one(createform)
-        return render_template('login.html')
-    else :
-
-        return render_template('login.html')
-        # return jsonify({'result': 'success'})
-
+        return jsonify({'result': 'success'})
+    except:
+        return jsonify({'result': 'fail'})
 
 
 # @app.route('/memo', methods=['POST'])
