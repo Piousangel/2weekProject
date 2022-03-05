@@ -2,6 +2,7 @@ from base64 import decode
 from array import array
 from crypt import methods
 from datetime import datetime
+from email import message
 from os import access
 from flask import Flask, json, request, render_template, jsonify, redirect, url_for, session
 import requests, random
@@ -10,29 +11,32 @@ import datetime
 from bs4 import BeautifulSoup
 from pymongo import MongoClient  
 from flask_bcrypt import Bcrypt
+import bcrypt
+from bson import ObjectId
 from functools import wraps
 
 app = Flask(__name__)
 # SECRET_KEY = 'abc'
-app.config['SECRET_KEY'] = 'ABC123'
+# app.config['SECRET_KEY'] = 'ABC123'
+app.secret_key = 'ABC123'
 bcrypt = Bcrypt(app)
 userInfo = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
 db = userInfo.dbclient
 
-def check_for_token(func):
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        token = request.args.get('my_access_token')
-        if not token:
-            print('there is no token')
-            return redirect('/login2')
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        except:
-            print('token invalid')
-            return redirect('/login2')
-        return func(*args, **kwargs)
-    return wrapped
+# def check_for_token(func):
+#     @wraps(func)
+#     def wrapped(*args, **kwargs):
+#         token = request.args.get('my_access_token')
+#         if not token:
+#             print('there is no token')
+#             return redirect('/login2')
+#         try:
+#             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+#         except:
+#             print('token invalid')
+#             return redirect('/login2')
+#         return func(*args, **kwargs)
+#     return wrapped
 
 # @app.route('/chk_token')
 # def token():
@@ -69,28 +73,54 @@ def create_form():
 #     else :
 #         return redirect('/home')
 
-@app.route('/confirm_user', methods = ['POST'])
-def login_user() :
-    id_receive = request.form['id_give']
-    pw_receive = request.form['password_give']
-    # print(id_receive, pw_receive)
-    user_info = db.userInfo.find_one({'user_id' : id_receive})
-    # print(user_info)
-    try:
-        if bcrypt.check_password_hash(user_info['user_password'], pw_receive) :
-        # print(bcrypt.check_password_hash(user_info['user_password'], pw_receive))
-        # render_params = {}
-        # render_params['id'] = id_receive
-        # **render_params,
-            access_payload = {"id": id_receive, "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=30)}
-            # session['logged_in'] = True
-            # return jsonify({"result": "success", 'access_token': jwt.encode(access_payload, app.config['SECRET_KEY'], algorithm="HS256")})
-            return jsonify({"result": "success"})
-        else:
-            return jsonify({"result": "fail"})
-    except:
-        print("Tlqkf???")
-        return jsonify({"result": "exception!"})
+@app.route('/confirm_user', methods=['GET, POST'])
+def login_user():
+    if 'user_id' in session :
+        return redirect(url_for("logged_in"))
+    if request.method == 'GET':
+        return render_template("login2.html")
+
+    if request.method == 'POST' :
+        id_receive = request.form['id_give']
+        pw_receive = request.form['password_give']
+        user_info = db.userInfo.find_one({'user_id' : id_receive})
+
+        if user_info is not None :
+            id_val = user_info['user_id']
+            name_val = user_info['user_name']
+            passwordchk = user_info['user_password']
+            if bcrypt.checkpw(pw_receive.encode('utf-8'), passwordchk) :
+                session['user_id'] = id_val
+                session['user_name'] = name_val
+                return redirect(url_for('logged_in'))
+            else :
+                message = 'Email not found'
+                return render_template('/confirm_user', message = message)
+
+    return render_template('/confirm_user', message= message)
+
+# @app.route('/confirm_user', methods = ['POST'])
+# def login_user() :
+#     id_receive = request.form['id_give']
+#     pw_receive = request.form['password_give']
+#     # print(id_receive, pw_receive)
+#     user_info = db.userInfo.find_one({'user_id' : id_receive})
+#     # print(user_info)
+#     try:
+#         if bcrypt.check_password_hash(user_info['user_password'], pw_receive) :
+#         # print(bcrypt.check_password_hash(user_info['user_password'], pw_receive))
+#         # render_params = {}
+#         # render_params['id'] = id_receive
+#         # **render_params,
+#             access_payload = {"id": id_receive, "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=30)}
+#             # session['logged_in'] = True
+#             # return jsonify({"result": "success", 'access_token': jwt.encode(access_payload, app.config['SECRET_KEY'], algorithm="HS256")})
+#             return jsonify({"result": "success"})
+#         else:
+#             return jsonify({"result": "fail"})
+#     except:
+#         print("Tlqkf???")
+#         return jsonify({"result": "exception!"})
 
 @app.route('/create_m', methods = ['POST'])
 def create_m():
@@ -105,9 +135,14 @@ def create_m():
     except:
         return jsonify({'result': 'fail'})
 
-@app.route('/main')
+@app.route('/logged_in')
 def mainhome() :
-    return render_template('main2.html')
+    if "user_id" in session:
+        userid = session["user_id"]
+        username = session["user_name"]
+        return render_template('main2.html', userid=userid, username=username)
+    else:
+        return redirect(url_for("confirm_user"))
     
 @app.route('/chk_idOverlapping', methods=['POST'])
 def check_idOverlapping():
