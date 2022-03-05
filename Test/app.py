@@ -12,7 +12,6 @@ from pymongo import MongoClient
 from bson import ObjectId
 import bcrypt
 
-
 app = Flask(__name__)
 # SECRET_KEY = 'abc'
 # app.config['SECRET_KEY'] = 'ABC123'
@@ -21,63 +20,26 @@ app.secret_key = 'ABC123'
 userInfo = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
 db = userInfo.dbclient
 
-# def check_for_token(func):
-#     @wraps(func)
-#     def wrapped(*args, **kwargs):
-#         token = request.args.get('my_access_token')
-#         if not token:
-#             print('there is no token')
-#             return redirect('/login2')
-#         try:
-#             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-#         except:
-#             print('token invalid')
-#             return redirect('/login2')
-#         return func(*args, **kwargs)
-#     return wrapped
-
-# @app.route('/chk_token')
-# def token():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.userInfo.find_one({"user_id" : payload['user_id']})
-#     except jwt.ExpiredSignatureError:
-#         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-#     except jwt.exceptions.DecodeError:
-#         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-
 @app.route('/')
 def home():
-    return render_template('login2.html', title = 'Login page')
+    if session.get("logged_in"):
+        print("logout!!!!!!")
+        return render_template("main.html")
+    else :  
+        return render_template('login2.html', title = 'Login page')
 
 @app.route('/home')
 def welcome():
-    return render_template('login2.html')
+    return render_template('main.html')
 
 @app.route('/create_form', methods=['GET'])
 def create_form():
     return render_template('newform.html', title = 'NewForm page')
     # return jsonify({'result': 'success', 'html_name': 'newform.html'})
 
-# @app.route('/logincheck', methods=['GET'])
-# @check_for_token
-# def logincheck():
-#     if session['logged_in'] == True :
-#         user_token = request.args.get('my_access_token')
-#         decoded = jwt.decode(user_token, app.config['SECRET_KEY'], algorithms=["HS256"])
-#         doc = {'user_id':decoded['id']}
-#         return redirect('/main')
-#     else :
-#         return redirect('/home')
 
 @app.route('/confirm_user', methods=['GET', 'POST'])
 def login_user():
-    if 'user_id' in session :
-        return redirect(url_for("logged_in"))
-    if request.method == 'GET':
-        return render_template("login2.html")
-
     if request.method == 'POST' :
         id_receive = request.form['id_give']
         pw_receive = request.form['password_give']
@@ -87,28 +49,16 @@ def login_user():
             id_val = user_info['user_id']
             name_val = user_info['user_name']
             passwordchk = user_info['user_password']
-            if bcrypt.checkpw(pw_receive.encode('utf-8'), passwordchk) :      
+            if bcrypt.checkpw(pw_receive.encode('utf-8'), passwordchk) :
+                session['logged_in'] = True 
                 session['user_id'] = id_val
                 session['user_name'] = name_val
-                return redirect(url_for("logged_in"))
+                return jsonify({'result' : 'success'})
             else :
-                message = 'Email not found'
-                return render_template('login_user', message = message)
+                return jsonify({'result' : 'fail'})
+        else :
+            return jsonify({'result' : 'fail'})
 
-    return render_template('/confirm_user', message= message)
-
-@app.route('/logged_in')
-def logged_in() :
-    if "user_id" in session:
-        # print("tlqkfsusdk!!!!!!!!!!!!!")
-        userid = session["user_id"]
-        username = session["user_name"]
-        print(userid)
-        print(username)
-        return render_template('main2.html', userid=userid, username=username)
-    else:
-        return redirect(url_for("login_user"))
-    
 
 # @app.route('/confirm_user', methods = ['POST'])
 # def login_user() :
@@ -147,9 +97,6 @@ def create_m():
     except:
         return jsonify({'result': 'fail'})
 
-
-
-    
 @app.route('/chk_idOverlapping', methods=['POST'])
 def check_idOverlapping():
     id_receive = request.form['id_give']
@@ -160,6 +107,11 @@ def check_idOverlapping():
     else :
         return jsonify({'result': 'fail'})
     
+@app.route('/logout', methods=['GET'])
+def logout():
+    session['logged_in'] = False
+    return redirect(url_for('home'))
+
 # @app.route('/create_m', methods=['GET', 'POST'])
 # def create_m():
 #     if request.method == 'POST':

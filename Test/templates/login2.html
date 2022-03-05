@@ -101,17 +101,14 @@
             url: "/confirm_user",
             data : {'id_give': id, 'password_give': pw},
             success: function(response) {
-                console.log(response);
-                alert("로그인성공!!!")
-                //window.location.reload();
-                // if(response['result'] == 'success') {
-                //     alert("로그인 되었습니다.");
-                //     // location.href = "/main"
-                // }
-                // else {
-                //     alert("아이디 또는 비밀번호를 다시 확인해 주세요.");
-                //     window.location.reload();
-                // }
+                if(response["result"] == "success"){
+                    alert("로그인 성공!");
+                    window.location.href = '/home'
+                }
+                else{
+                    alert("로그인 실패");
+                    window.location.reload();
+                }
             }
 
         })
