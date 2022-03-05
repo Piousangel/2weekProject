@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title> Register </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+        <style>
+            .log-box{
+                width:500px;
+                margin: 20px auto 0 auto;
+                /* border: black solid 2px; */
+                padding: 40px;
+                border-radius: 10px;
+            }
+            #title{
+                margin-bottom: 20px;
+            }
+
+        </style>
+        <script>
+            function register() {
+            const id = $("#id").val();
+            const password = $("#password").val();
+            const password_check = $("#password-check").val();
+            $.ajax({
+                type: "POST",
+                url: "/register/add",
+                data: { 'id_give': id, 'password_give': password},
+                success: function (response) {
+                     if (response["result"] == "overlap") {
+                        alert("아이디 중복!")
+                        window.location.reload();
+                    } else if (password != password_check) {
+                        alert("비밀번호 불일치!")
+                        window.location.reload();
+                    } else if (response["result"] == "success") {
+                        alert("회원가입 성공!");
+                        window.location.href = '/';
+                    }
+                }
+            })
+
+        }
+        </script>
+    </head>
+
+    <body>
+        <div class="log-box has-background-primary">
+            <div class="field">
+                <label class="label" id="title">회원가입</label>
+                <label class="label">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                <input class="input" id="id" type="username" name="username" placeholder="Username">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                </span>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Password</label>
+                <p class="control has-icons-left">
+                <input class="input" id="password" type="password" name="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+            <div class="field">
+                <label class="label">Password Check</label>
+                <p class="control has-icons-left"> 
+                <input class="input" id="password-check" type="password" name="password" placeholder="Password Check">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+  
+            <div class="field">
+                <p class="control">
+                  <button onclick="register()" class="button is-warning is-light">
+                <!-- <button type="submit" class="button is-link"> -->
+                    Register
+                </button>
+                </p>
+            </div>
+        </div>
+    </body>

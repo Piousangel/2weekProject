@@ -5,21 +5,19 @@ from datetime import datetime
 from email import message
 from os import access
 from flask import Flask, json, request, render_template, jsonify, redirect, url_for, session
-import requests, random
 import jwt
 import datetime
 from bs4 import BeautifulSoup
 from pymongo import MongoClient  
-from flask_bcrypt import Bcrypt
-import bcrypt
 from bson import ObjectId
-from functools import wraps
+import bcrypt
+
 
 app = Flask(__name__)
 # SECRET_KEY = 'abc'
 # app.config['SECRET_KEY'] = 'ABC123'
 app.secret_key = 'ABC123'
-bcrypt = Bcrypt(app)
+# bcrypt = Bcrypt(app)
 userInfo = MongoClient('localhost', 27017)   #mongodb://test:test@18.233.169.28  localhost
 db = userInfo.dbclient
 
@@ -73,7 +71,7 @@ def create_form():
 #     else :
 #         return redirect('/home')
 
-@app.route('/confirm_user', methods=['GET, POST'])
+@app.route('/confirm_user', methods=['GET', 'POST'])
 def login_user():
     if 'user_id' in session :
         return redirect(url_for("logged_in"))
@@ -89,15 +87,28 @@ def login_user():
             id_val = user_info['user_id']
             name_val = user_info['user_name']
             passwordchk = user_info['user_password']
-            if bcrypt.checkpw(pw_receive.encode('utf-8'), passwordchk) :
+            if bcrypt.checkpw(pw_receive.encode('utf-8'), passwordchk) :      
                 session['user_id'] = id_val
                 session['user_name'] = name_val
-                return redirect(url_for('logged_in'))
+                return redirect(url_for("logged_in"))
             else :
                 message = 'Email not found'
-                return render_template('/confirm_user', message = message)
+                return render_template('login_user', message = message)
 
     return render_template('/confirm_user', message= message)
+
+@app.route('/logged_in')
+def logged_in() :
+    if "user_id" in session:
+        # print("tlqkfsusdk!!!!!!!!!!!!!")
+        userid = session["user_id"]
+        username = session["user_name"]
+        print(userid)
+        print(username)
+        return render_template('main2.html', userid=userid, username=username)
+    else:
+        return redirect(url_for("login_user"))
+    
 
 # @app.route('/confirm_user', methods = ['POST'])
 # def login_user() :
@@ -127,7 +138,8 @@ def create_m():
     name_receive = request.form['name_give']
     id_receive = request.form['id_give']
     password_receive = request.form['password_give']
-    pw_hash = bcrypt.generate_password_hash(password_receive)
+    pw_hash = bcrypt.hashpw(password_receive.encode('utf-8'), bcrypt.gensalt())
+    # bcrypt.generate_password_hash(password_receive)
     try:
         createform = {'user_name': name_receive, 'user_id': id_receive, 'user_password' : pw_hash}
         db.userInfo.insert_one(createform)
@@ -135,14 +147,8 @@ def create_m():
     except:
         return jsonify({'result': 'fail'})
 
-@app.route('/logged_in')
-def mainhome() :
-    if "user_id" in session:
-        userid = session["user_id"]
-        username = session["user_name"]
-        return render_template('main2.html', userid=userid, username=username)
-    else:
-        return redirect(url_for("confirm_user"))
+
+
     
 @app.route('/chk_idOverlapping', methods=['POST'])
 def check_idOverlapping():

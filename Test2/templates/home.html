@@ -1,0 +1,389 @@
+<!Doctype html>
+<html lang="ko">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+
+
+    <title>home</title>
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .card {
+            padding: 5px;
+            height: 320px;
+        }
+
+        .content {
+            word-wrap: anywhere;
+            height: 100px;
+            display: flex;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .memo-input {
+            height: 80px;
+            resize: none;
+        }
+
+        .input-card {
+            padding-top: 15px;
+        }
+
+        .input-cardbox {
+            border: rgb(111, 177, 161) solid 5px;
+        }
+
+        .post-box {
+            padding-bottom: 13px;
+            overflow:hidden
+        }
+
+        #logout {
+            text-align: right;
+            margin-right: 20px;
+            margin-top: 10px;
+            /* color: black; */
+            font-weight: bold;
+        }
+
+        #icon {
+            padding-top: 10px;
+        }
+
+        #icon {
+            padding-top: 5px;
+        }
+        .dropdown-button{
+            /* background-color: hsl(48, 100%, 29%); */
+            /* border:hsl(48, 100%, 67%) solid 3px; */
+            border:black solid 1px;
+            margin-bottom: 5px;
+        }
+        .card-footer-item:hover{
+            background-color: rgb(143, 132, 132);
+        }
+        .like-footer{
+            margin-top: 5px;
+        }
+        /* .upload-button{
+            border:black solid 0.5px;
+            border-radius: 5px;
+        } */
+    </style>
+    <script>
+        let anonymous_check = false;
+
+        function anonymous(a_box) {
+            if (a_box.checked == true) {
+                anonymous_check = true
+            } else {
+                anonymous_check = false
+            }
+        }
+
+        $(document).ready(function () {
+            showMemos();
+
+        });
+
+        function getDate() {
+            let today = new Date();
+            let year = today.getFullYear();
+            let month = today.getMonth();
+            let date = ("00" + today.getDate()).slice(-2);
+            let hours = ("00" + today.getHours()).slice(-2);
+            let minutes = ("00" + today.getMinutes()).slice(-2);
+            let now = year + '/' + month + '/' + date + ' ' + hours + ":" + minutes;
+            return now
+        }
+
+        function postMemo() {
+            let name = $("#my_name").text().replace("@", "");
+            let memo = $("#my_memo").val();
+            let date = getDate();
+
+            $.ajax({
+                type: "POST",
+                url: "/home/post",
+                data: { id_give: name, memo_give: memo, anonymous: anonymous_check, date_give: date },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert("저장 완료!");
+                        window.location.reload();
+                    } else {
+                        alert("서버 오류!")
+                    }
+                }
+            })
+        }
+
+        function sortMemo(order) {
+            $.ajax({
+                type: "POST",
+                url: "/home/sort",
+                data: { sort_order_give: order },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+        
+        function showUpdate(sel){
+            
+                $(sel).parents('div.column').hide()
+                $(sel).parents('div.column').next('div.column').show()
+            }
+        
+        function updateMemo(sel, db_id){
+            console.log(sel)
+            let new_memo = $(sel).parent().prev().children().children().val();
+            console.log(new_memo)
+            let new_time = $(sel).prev().text();
+            $.ajax({
+                type: 'POST',
+                url: '/home/update',
+                data: {'new_memo': new_memo, 'db_id_give': db_id, 'new_time': new_time},
+                success: function(response){
+                    if (response['result'] == 'success'){
+                        alert('수정 완료!')
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+
+        function showMemos() {
+            $.ajax({
+                type: "GET",
+                url: "/home/read",
+                data: {},
+                success: function (response) {
+                    let memos = response["memos"];
+
+                    for (let i = memos.length - 1; i >= 0; i--) {
+                        let upload_name = '익명'
+                        if (memos[i]['anonymous'] == 'false') {
+                            upload_name = memos[i]['id']
+                        }
+
+                        let tempHtml = `<div v-for="card in cardData" key="card.id" class="column is-4">
+                                            <div class="card large">
+                                                <div class="card-content post-box">`
+                        if (memos[i]['id'] == `{{session['name']}}`) {
+                            tempHtml = tempHtml + `<span id="icon" class="icon is-small has-text-danger-dark is-pulled-right" >
+                                                        <i class="far fa-times-circle" onclick="deleteMemo('${memos[i]['_id']}')"></i>
+                                                    </span>`;
+                        }
+                        tempHtml = tempHtml + `<div class="title">@${upload_name}</div>
+                                                <div class="content is-multiline">${memos[i]['memo']}</div>`
+                        if (memos[i]['id'] == `{{session['name']}}`) {
+                            tempHtml = tempHtml + `<div class="button is-link is-small" style="float:left" onclick="showUpdate(this)""> 수정
+                                                    </div>`;
+                        }
+                        
+                        tempHtml = tempHtml + `<div class="is-pulled-right" style="float:left">${memos[i]['date']}</div>
+                                                </div>
+                                                
+                                                <footer class="card-footer like-footer">
+                                                    <p class="card-footer-item has-text-info" style="cursor: pointer" onclick="like_memo('${memos[i]['_id']}')">
+                                                        ${memos[i]['like']}
+                                                        <span id="icon like" class="icon" >
+                                                            <i class="far fa-thumbs-up"></i>
+                                                        </span>
+                                                    </p>
+                                                    <p class="card-footer-item has-text-danger" style="cursor: pointer" onclick="dislike_memo('${memos[i]['_id']}')">
+                                                        ${memos[i]['dislike']}
+                                                        <span id="icon" class="icon" >
+                                                            <i class="far fa-thumbs-down"></i>
+                                                        </span>
+                                                    </p>
+                                                </footer>
+                                            </div>
+                                        </div>
+                                        <div v-for="card in cardData" key="card.id" class="column is-4 update-card" style="display:none">
+                                            <div class="card large">
+                                                <div class="card-content post-box">
+                                                    <div class="title">@${upload_name}</div>
+                                                    <div class="field">
+                                                        <div class="control">
+                                                            <textarea rows="5" class="input memo-input" id="my_memo" type="text">${memos[i]['memo']}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div style="margin-top:65px">
+                                                    <div class="is-right">${getDate()}</div>
+                                                    <div class="button is-link" style="margin-top:5px" onclick="updateMemo(this, '${memos[i]['_id']}')"> 저장
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        `
+
+                        $("#app").append(tempHtml);
+                    }
+                }
+            })
+        }
+
+        function deleteMemo(db_id) {
+            console.log(db_id);
+            $.ajax({
+                type: "POST",
+                url: "/home/delete",
+                data: { 'db_id_give': db_id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('삭제 완료!')
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+        function like_memo(db_id) {
+            let user_id = `{{session['name']}}`
+            $.ajax({
+                type: "POST",
+                url: "/home/like",
+                data: { 'db_id_give': db_id, 'id_give': user_id},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('좋아요 완료!')
+                        window.location.reload()
+                    }
+                    else {
+                        alert('이미 추천하셨습니다.')
+                    }
+                    
+                    }
+            
+                }
+            )}
+
+        function dislike_memo(db_id) {
+            let user_id = `{{session['name']}}`
+            $.ajax({
+                type: "POST",
+                url: "/home/dislike",
+                data: { 'db_id_give': db_id, 'id_give': user_id},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('싫어요 완료!')
+                        window.location.reload()
+                    }
+                    else{
+                        alert('이미 비추천하셨습니다.')
+                    }
+                    }
+                }
+            )}
+    </script>
+</head>
+
+<body>
+    <section class="hero is-success">
+        <a id="logout" href="/logout" class="has-text-black"> 로그아웃 </a>
+        <div class="hero-body">
+            <div class="container center">
+                <img src="/static/logo2.png">
+                <h1 class="title">
+                    익명 게시판
+                </h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="section">
+
+            <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                    <button class="button dropdown-button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                        <span>정렬</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                    <div class="dropdown-content ">
+                        <a onclick="sortMemo('mine')" class="dropdown-item">
+                            내가 쓴 글
+                        </a>
+                        <a onclick="sortMemo('time')" class="dropdown-item">
+                            최신순
+                        </a>
+                        <a onclick="sortMemo('time_old')" class="dropdown-item">
+                            오래된순
+                        </a>
+                        <a onclick="sortMemo('like')" class="dropdown-item">
+                            좋아요순
+                        </a>
+                        <a onclick="sortMemo('dislike')" class="dropdown-item">
+                            싫어요순
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="app" class="row columns is-multiline">
+                <div v-for="card in cardData" key="card.id" class="column is-4">
+
+                    <div class="card large input-cardbox">
+                        <header class="card-header has-background-success">
+                            <p class="card-header-title">
+                                글쓰기
+                            </p>
+                        </header>
+                        <div class="card-content input-card">
+                            <div class="title">
+                                <h2 class="title" id="my_name">@{{session['name']}}</h2>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <textarea rows="4" class="input memo-input" id="my_memo" type="text"
+                                        placeholder="내용"></textarea>
+                                </div>
+                            </div>
+                            <div class="button is-link" onclick="postMemo()" style="float:left"> 업로드
+                            </div>
+                            <label class="checkbox is-pulled-right" style="float:left">
+                                <input id="anonymous" type="checkbox" onclick="anonymous(this)">
+                                익명
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+
+</html>
