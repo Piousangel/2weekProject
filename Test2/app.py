@@ -5,7 +5,7 @@ import jwt
 import requests
 
 app = Flask(__name__)
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@18.233.169.28', 27017)
 db = client.session  
 
 @app.route('/')
