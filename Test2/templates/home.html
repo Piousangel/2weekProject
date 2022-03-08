@@ -98,7 +98,6 @@
 
         $(document).ready(function () {
             showMemos();
-
         });
 
         function getDate() {
@@ -146,15 +145,14 @@
         }
         
         function showUpdate(sel){
-            
                 $(sel).parents('div.column').hide()
                 $(sel).parents('div.column').next('div.column').show()
             }
         
         function updateMemo(sel, db_id){
-            console.log(sel)
+            // console.log(sel)
             let new_memo = $(sel).parent().prev().children().children().val();
-            console.log(new_memo)
+            // console.log(new_memo)
             let new_time = $(sel).prev().text();
             $.ajax({
                 type: 'POST',
