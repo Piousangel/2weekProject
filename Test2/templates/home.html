@@ -167,6 +167,20 @@
             })
         }
 
+        function chkCount() {
+
+            let count = a;
+
+            $.ajax({
+                type: "Post",
+                url: "/home/count",
+                data: {"count_receive" : count},
+                success: function (response) {
+                    alert("chk ok!")
+                }
+
+            })
+        }
 
         function showMemos() {
             $.ajax({
