@@ -1,5 +1,3 @@
-# 2월5일까지 http://hyunseokmemo.shop  
-
 ## 사용 Stack :stars:
 - Python, Jquery
 - Bootstrap
